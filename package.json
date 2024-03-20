@@ -1,0 +1,23 @@
+{
+  "name": "csv-reader-and-graph-tool",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron main.js",
+    "package": "electron-builder build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "CSV-reader-and-graph-tool"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^29.1.5",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "com.CSVgraph.CSVgraph"
+  }
+}
