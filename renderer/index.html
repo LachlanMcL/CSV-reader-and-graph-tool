@@ -1,9 +1,27 @@
 <!doctype html>
 <html>
   <head>
+    <link rel="stylesheet" href="css/style.css" />
+    <script src="js/renderer.js" defer></script>
     <title>This is the title of the webpage!</title>
   </head>
   <body>
-    <p>This is an example paragraph. Anything in the <strong>body</strong> tag will appear on the page, just like this <strong>p</strong> tag and its contents.</p>
+    <!-- <input type="file" style="opacity: 0" id="CSVinput"/> -->
+    
+    <div id="mySidenav" class="sidenav" onmouseleave="closeNav()">
+      <a href="#" onclick="document.getElementById('CSVinput').click()">Select CSV</a>
+    </div>
+
+    <!-- Side navigation open element -->
+    <div class="sidenavOpen" onmouseenter="openNav()"></div>
+    <!-- Page content -->
+    <div id="main"> 
+      <div class="main">
+        <table id="CSVtable"></table>
+      </div>
+    </div>
+    
+    
+
   </body>
 </html>
