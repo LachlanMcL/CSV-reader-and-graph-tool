@@ -3,11 +3,10 @@
   <head>
     <link rel="stylesheet" href="css/style.css" />
     <script src="js/renderer.js" defer></script>
-    <title>This is the title of the webpage!</title>
+    <title>Table View</title>
   </head>
+  
   <body>
-    <!-- <input type="file" style="opacity: 0" id="CSVinput"/> -->
-    
     <div id="mySidenav" class="sidenav" onmouseleave="closeNav()">
       <a href="#" onclick="document.getElementById('CSVinput').click()">Select CSV</a>
     </div>
@@ -15,13 +14,19 @@
     <!-- Side navigation open element -->
     <div class="sidenavOpen" onmouseenter="openNav()"></div>
     <!-- Page content -->
+    <div id="topNavBar">
+      <span class="topNavBarElement"><a id="homeTab" href="#data">Data</a></span>
+      <span class="topNavBarElement"><a id="graphTab" href="#graph">Graph</a></span>
+      <span class="topNavBarElement"><a id="analysisTab" href="#analysis">Analysis</a></span>
+    </div>
     <div id="main"> 
       <div class="main">
+        <h1>table view</h1>
         <table id="CSVtable"></table>
       </div>
+      <div class="main">
+        <h1>graph view</h1>
+      </div>
     </div>
-    
-    
-
   </body>
 </html>

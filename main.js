@@ -1,11 +1,12 @@
 const { app, BrowserWindow, Menu } = require('electron')
 const path = require('path')
-
 const isMac = process.platform === 'darwin'
 
+let mainWindow;
+
 function createMainWindow() {
-    const mainWindow = new BrowserWindow({
-        title: "Image Resizer",
+    mainWindow = new BrowserWindow({
+        title: "csv-reader-and-graph-tool",
         width: 1500,
         height: 1000,
     })
@@ -16,11 +17,18 @@ function createMainWindow() {
 app.whenReady().then(() => {
     createMainWindow()
 
+    //remove main window from memory on close
+    mainWindow.on('closed', () => {
+        mainWindow = null
+    })
+
     app.on('activate', () => {
         if (BrowserWindow.getAllWindows().length === 0) {
             createMainWindow()
         }
     })
+
+
 })
 
 //depending on system, app will close differently.

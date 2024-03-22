@@ -1,18 +1,28 @@
 const openCSVbutton = document.getElementById("mySidenav").getElementsByTagName("a")[0]
 const body = document.getElementsByTagName("body")[0]
 const table = document.getElementById("CSVtable")
+const mainTabs = document.getElementsByClassName('main')
+
+const topNavBarDataButton = document.getElementById("homeTab")
+const topNavBarGraphButton = document.getElementById("graphTab")
+const topNavBarAnalysisButton = document.getElementById("analysisTab")
 
 const DELIMITER = ','
 const NEWLINE = '\r\n'
 
-/* Set the width of the side navigation to 250px and the left margin of the page content to 250px and add a black background color to body */
+//hide all tabs then display the home tab.
+let currentTab = mainTabs[0]
+for (let tab of mainTabs) { 
+  tab.style.display = 'none'
+}
+currentTab.style.display = 'block'
+
 function openNav() {
     document.getElementById("mySidenav").style.width = "250px";
     document.getElementById("main").style.marginLeft = "250px";
     document.body.style.backgroundColor = "rgba(0,0,0,0.4)";
   }
   
-/* Set the width of the side navigation to 0 and the left margin of the page content to 0, and the background color of body to white */
 function closeNav() {
   document.getElementById("mySidenav").style.width = "0";
   document.getElementById("main").style.marginLeft = "0";
@@ -92,5 +102,17 @@ function toTable(text) {
 
     table.appendChild(tableRows)
   })
-
 }
+
+//top nav bar menu buttons to switch tabs.
+topNavBarDataButton.addEventListener('click', () => {
+  currentTab.style.display = 'none'
+  currentTab = mainTabs[0]
+  currentTab.style.display = 'block'
+})
+
+topNavBarGraphButton.addEventListener('click', () => {
+  currentTab.style.display = 'none'
+  currentTab = mainTabs[1]
+  currentTab.style.display = 'block'
+})
