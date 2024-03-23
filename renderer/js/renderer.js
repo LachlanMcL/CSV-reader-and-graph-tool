@@ -10,6 +10,9 @@ const topNavBarAnalysisButton = document.getElementById("analysisTab")
 const DELIMITER = ','
 const NEWLINE = '\r\n'
 
+let currentCSVdata = new Map()
+let cellSelectionIndex = []
+
 //hide all tabs then display the home tab.
 let currentTab = mainTabs[0]
 for (let tab of mainTabs) { 
@@ -69,8 +72,11 @@ function toTable(text) {
   let headers = rows.shift().split(DELIMITER)
   let headerTableRow = document.createElement('tr')
 
+  let headerIndex = 0
   headers.forEach(name => {
     let tableHeaders = document.createElement('th')
+    tableHeaders.className = `col${headerIndex}`
+    headerIndex++
 
     name = name.trim()
     if (!name) return //full whitespace headers dont get added.
@@ -92,11 +98,19 @@ function toTable(text) {
 
     tableRows = document.createElement('tr')
 
+    let colIndex = 0
     cols.forEach(column => {
       let dataCells = document.createElement('td')
       column = column.trim()
 
       dataCells.textContent = column
+      dataCells.className = `col${colIndex}`
+
+      setCSVdata(colIndex, column)
+      setColumnEvents(dataCells)
+
+      colIndex++
+
       tableRows.appendChild(dataCells)
     })
 
@@ -104,6 +118,44 @@ function toTable(text) {
   })
 }
 
+function setCSVdata(colIndex, column) {
+  if (!currentCSVdata.has(colIndex)) currentCSVdata.set(colIndex, []) //if map not made yet for column, make it with an empty array.
+  currentCSVdata.get(colIndex).push(column)
+}
+
+function setColumnEvents(dataCells) {
+  let className = dataCells.className
+  let cellElements = document.getElementsByClassName(className)
+
+  dataCells.addEventListener('mouseover', () => {
+    for (let cell of cellElements) {
+      if (!cellSelectionIndex.includes(className)) cell.style.backgroundColor = "#497ceb"
+    }
+  })
+
+  dataCells.addEventListener('mouseout', () => {
+    for (let cell of cellElements) {
+      if (!cellSelectionIndex.includes(className)) cell.style.backgroundColor = ""
+    }
+  })
+
+  dataCells.addEventListener('click', () => {
+    if (cellSelectionIndex.includes(className)) {
+      let index = cellSelectionIndex.indexOf(className)
+      cellSelectionIndex = (cellSelectionIndex.splice(0,index)).concat(cellSelectionIndex.splice(index+1)) //remove element from array
+
+      for (let cell of cellElements) {
+        cell.style.backgroundColor = ""
+      }
+    } else {
+      cellSelectionIndex.push(className)
+
+      for (let cell of cellElements) {
+        cell.style.backgroundColor = "#d18f8f"
+      }
+    }
+  })
+}
 //top nav bar menu buttons to switch tabs.
 topNavBarDataButton.addEventListener('click', () => {
   currentTab.style.display = 'none'
@@ -116,3 +168,13 @@ topNavBarGraphButton.addEventListener('click', () => {
   currentTab = mainTabs[1]
   currentTab.style.display = 'block'
 })
+
+function selectedCSVdata() {
+
+  const regex = /col(\d+)/
+  cellSelectionIndex.forEach(index => {
+    let indexNumber = index.match(regex)[1]
+    let dataset = currentCSVdata.get(+indexNumber)
+    console.log(dataset)
+  })
+}
