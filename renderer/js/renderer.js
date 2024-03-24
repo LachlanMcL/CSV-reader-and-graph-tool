@@ -7,6 +7,8 @@ const topNavBarDataButton = document.getElementById("homeTab")
 const topNavBarGraphButton = document.getElementById("graphTab")
 const topNavBarAnalysisButton = document.getElementById("analysisTab")
 
+const meanGraphButton = document.getElementById("meanGraphButton")
+
 const DELIMITER = ','
 const NEWLINE = '\r\n'
 
@@ -76,9 +78,10 @@ function toTable(text) {
   headers.forEach(name => {
     let tableHeaders = document.createElement('th')
     tableHeaders.className = `col${headerIndex}`
-    headerIndex++
-
+    
     name = name.trim()
+    setCSVdata(headerIndex, name)
+    headerIndex++
     if (!name) return //full whitespace headers dont get added.
 
     tableHeaders.textContent = name
@@ -156,6 +159,7 @@ function setColumnEvents(dataCells) {
     }
   })
 }
+
 //top nav bar menu buttons to switch tabs.
 topNavBarDataButton.addEventListener('click', () => {
   currentTab.style.display = 'none'
@@ -169,12 +173,49 @@ topNavBarGraphButton.addEventListener('click', () => {
   currentTab.style.display = 'block'
 })
 
-function selectedCSVdata() {
+//graphing
+meanGraphButton.addEventListener('click', () => {
+  let selectedCSVdata = getSelectedCSVdata(cellSelectionIndex)
+  let averageData = getAverageOfSelectedData(selectedCSVdata)
+  displayGraph(averageData)
+})
 
+function getSelectedCSVdata(cellSelectionIndex) {
+  let selectedCSVdata = new Map()
   const regex = /col(\d+)/
   cellSelectionIndex.forEach(index => {
     let indexNumber = index.match(regex)[1]
-    let dataset = currentCSVdata.get(+indexNumber)
-    console.log(dataset)
+    let dataset = [...currentCSVdata.get(+indexNumber)]
+    selectedCSVdata.set(dataset[0], dataset.splice(1))
   })
+  return selectedCSVdata
+}
+
+function getAverageOfSelectedData(selectedCSVdata) {
+  let data = []
+  for (let entrys of selectedCSVdata) {
+    let values = entrys[1]
+    let averageOfValues = (values.reduce((a, b) => +a + +b))
+    averageOfValues = (averageOfValues / values.length).toFixed(2)
+    data.push({name: entrys[0], value: averageOfValues})
+  }
+  return data
+}
+
+async function displayGraph(data) {
+  electron.createChart(
+    document.getElementById('graphCanvas'),
+    {
+      type: 'bar',
+      data: {
+        labels: data.map(row => row.name),
+        datasets: [
+          {
+            label: 'Acquisitions by year',
+            data: data.map(row => row.value)
+          }
+        ]
+      }
+    }
+  )
 }
