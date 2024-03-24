@@ -8,6 +8,8 @@ const topNavBarGraphButton = document.getElementById("graphTab")
 const topNavBarAnalysisButton = document.getElementById("analysisTab")
 
 const meanGraphButton = document.getElementById("meanGraphButton")
+const modeGraphButton = document.getElementById("modeGraphButton")
+const sideNavButtons = document.getElementById('mySidenav').children
 
 const DELIMITER = ','
 const NEWLINE = '\r\n'
@@ -21,6 +23,7 @@ for (let tab of mainTabs) {
   tab.style.display = 'none'
 }
 currentTab.style.display = 'block'
+setSideNavButtonsHome()
 
 function openNav() {
     document.getElementById("mySidenav").style.width = "250px";
@@ -162,21 +165,45 @@ function setColumnEvents(dataCells) {
 
 //top nav bar menu buttons to switch tabs.
 topNavBarDataButton.addEventListener('click', () => {
+  setSideNavButtonsHome()
   currentTab.style.display = 'none'
   currentTab = mainTabs[0]
   currentTab.style.display = 'block'
 })
 
 topNavBarGraphButton.addEventListener('click', () => {
+  setSideNavButtonsGraph()
   currentTab.style.display = 'none'
   currentTab = mainTabs[1]
   currentTab.style.display = 'block'
 })
 
+function setSideNavButtonsHome() {
+  //hide all buttons on side nav bar, then display "Select CSV Button only"
+  for (let button of sideNavButtons) { 
+    button.style.display = 'none'
+  }
+  sideNavButtons[0].style.display = 'block'
+}
+
+function setSideNavButtonsGraph() {
+  for (let button of sideNavButtons) { 
+    button.style.display = 'none'
+  }
+  sideNavButtons[1].style.display = 'block' //"mean bar" button
+  sideNavButtons[2].style.display = 'block' //"mode bar" button
+}
+
 //graphing
 meanGraphButton.addEventListener('click', () => {
   let selectedCSVdata = getSelectedCSVdata(cellSelectionIndex)
   let averageData = getAverageOfSelectedData(selectedCSVdata)
+  displayGraph(averageData)
+})
+
+modeGraphButton.addEventListener('click', () => {
+  let selectedCSVdata = getSelectedCSVdata(cellSelectionIndex)
+  let averageData = getModeOfSelectedData(selectedCSVdata)
   displayGraph(averageData)
 })
 
@@ -202,6 +229,16 @@ function getAverageOfSelectedData(selectedCSVdata) {
   return data
 }
 
+function getModeOfSelectedData(selectedCSVdata) {
+  let data = []
+  for (let entrys of selectedCSVdata) {
+    let values = entrys[1]
+    let modeOfValues = (math.mode(values))[0]
+    data.push({name: entrys[0], value: modeOfValues})
+  }
+  return data
+}
+
 async function displayGraph(data) {
   electron.createChart(
     document.getElementById('graphCanvas'),
@@ -211,7 +248,6 @@ async function displayGraph(data) {
         labels: data.map(row => row.name),
         datasets: [
           {
-            label: 'Acquisitions by year',
             data: data.map(row => row.value)
           }
         ]
