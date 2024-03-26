@@ -52,7 +52,7 @@
     
   function closeNav() {
     document.getElementById("mySidenav").style.width = "0";
-  mainPage.style.marginLeft = "0";
+    mainPage.style.marginLeft = "0";
     document.body.style.backgroundColor = "white";
   }
 
@@ -176,7 +176,7 @@
     dataCells.addEventListener('click', () => {
       if (cellSelectionIndex.includes(className)) {
         let index = cellSelectionIndex.indexOf(className)
-        cellSelectionIndex = (cellSelectionIndex.splice(0,index)).concat(cellSelectionIndex.splice(index+1)) //remove element from array
+        cellSelectionIndex = (cellSelectionIndex.splice(0,index)).concat(cellSelectionIndex.splice(index+1)) //remove element from array when de-selected
 
         for (let cell of cellElements) {
           cell.style.backgroundColor = ""
@@ -204,6 +204,7 @@
     currentTab.style.display = 'none'
     currentTab = graphTab
     currentTab.style.display = 'block'
+    localStorage.setItem('cellSelectionIndex', JSON.stringify(cellSelectionIndex))
   })
 
   function setSideNavButtonsHome() {
@@ -223,82 +224,4 @@
     medianGraphButton.style.display = 'block'
   }
 
-  meanGraphButton.addEventListener('click', () => {
-    let selectedCSVdata = getSelectedCSVdata(cellSelectionIndex)
-    let averageData = getAverageOfSelectedData(selectedCSVdata)
-    displayGraph(averageData)
-  })
-
-  modeGraphButton.addEventListener('click', () => {
-    let selectedCSVdata = getSelectedCSVdata(cellSelectionIndex)
-    let modeData = getModeOfSelectedData(selectedCSVdata)
-    displayGraph(modeData)
-  })
-
-  medianGraphButton.addEventListener('click', () => {
-    let selectedCSVdata = getSelectedCSVdata(cellSelectionIndex)
-    let medianData = getMedianOfSelectedData(selectedCSVdata)
-    displayGraph(medianData)
-  })
-
-  function getSelectedCSVdata(cellSelectionIndex) {
-    let selectedCSVdata = new Map()
-    const regex = /col(\d+)/
-    cellSelectionIndex.forEach(index => {
-      let indexNumber = index.match(regex)[1]
-      let dataset = [...JSON.parse(localStorage.getItem(+indexNumber))]
-      selectedCSVdata.set(dataset[0], dataset.splice(1))
-    })
-    return selectedCSVdata
-  }
-
-  function getAverageOfSelectedData(selectedCSVdata) {
-    let data = []
-    for (let entrys of selectedCSVdata) {
-      let values = entrys[1]
-      let averageOfValues = (values.reduce((a, b) => +a + +b))
-      averageOfValues = (averageOfValues / values.length).toFixed(2)
-      data.push({name: entrys[0], value: averageOfValues})
-    }
-    return data
-  }
-
-  function getModeOfSelectedData(selectedCSVdata) {
-    let data = []
-    for (let entrys of selectedCSVdata) {
-      let values = entrys[1]
-      let modeOfValues = (math.mode(values))[0]
-      data.push({name: entrys[0], value: modeOfValues})
-    }
-    return data
-  }
-
-  function getMedianOfSelectedData(selectedCSVdata) {
-    let data = []
-    for (let entrys of selectedCSVdata) {
-      let values = entrys[1]
-      values = values.map(value => +value)
-      let modeOfValues = (math.median(values))
-      data.push({name: entrys[0], value: modeOfValues})
-    }
-    return data
-  }
-
-  async function displayGraph(data) {
-    electron.createChart(
-      document.getElementById('graphCanvas'),
-      {
-        type: 'bar',
-        data: {
-          labels: data.map(row => row.name),
-          datasets: [
-            {
-              data: data.map(row => row.value)
-            }
-          ]
-        }
-      }
-    )
-  }
-  
 })()
