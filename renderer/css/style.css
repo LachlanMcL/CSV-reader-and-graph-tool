@@ -43,7 +43,7 @@
   }
 
   /* The sidebar menu */
-.sidenavOpen {
+#sidenavOpen {
     height: 100%; /* Full-height: remove this if you want "auto" height */
     width: 20px; /* Set the width of the sidebar */
     position: fixed; /* Fixed Sidebar (stay in place on scroll) */

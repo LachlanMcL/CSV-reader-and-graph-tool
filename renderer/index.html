@@ -3,20 +3,20 @@
   <head>
     <link rel="stylesheet" href="css/style.css" />
     <script src="js/renderer.js" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+    <script src="js/graphing.js" defer></script>
     <title>Table View</title>
   </head>
   
   <body>
-    <div id="mySidenav" class="sidenav" onmouseleave="closeNav()">
-      <a href="#" onclick="document.getElementById('CSVinput').click()">Select CSV</a>
+    <div id="mySidenav" class="sidenav">
+      <a href="#" id="openCSVButton">Select CSV</a>
       <a href="#" id="meanGraphButton">Mean Graph</a>
       <a href="#" id="modeGraphButton">Mode Graph</a>
       <a href="#" id="medianGraphButton">Median Graph</a>
     </div>
 
     <!-- Side navigation open element -->
-    <div class="sidenavOpen" onmouseenter="openNav()"></div>
+    <div id="sidenavOpen"></div>
     <!-- Page content -->
     <div id="topNavBar">
       <span class="topNavBarElement"><a id="homeTab" href="#data">Data</a></span>
