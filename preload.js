@@ -11,5 +11,6 @@ contextBridge.exposeInMainWorld('electron', {
 });
 
 contextBridge.exposeInMainWorld('math', {
-    mode: (...args) => math.mode(...args)
+    mode: (...args) => math.mode(...args),
+    median: (...args) => math.median(...args),
 });

@@ -9,6 +9,7 @@ const topNavBarAnalysisButton = document.getElementById("analysisTab")
 
 const meanGraphButton = document.getElementById("meanGraphButton")
 const modeGraphButton = document.getElementById("modeGraphButton")
+const medianGraphButton = document.getElementById("medianGraphButton")
 const sideNavButtons = document.getElementById('mySidenav').children
 
 const DELIMITER = ','
@@ -192,6 +193,7 @@ function setSideNavButtonsGraph() {
   }
   sideNavButtons[1].style.display = 'block' //"mean bar" button
   sideNavButtons[2].style.display = 'block' //"mode bar" button
+  sideNavButtons[3].style.display = 'block' //"median bar" button
 }
 
 //graphing
@@ -203,8 +205,14 @@ meanGraphButton.addEventListener('click', () => {
 
 modeGraphButton.addEventListener('click', () => {
   let selectedCSVdata = getSelectedCSVdata(cellSelectionIndex)
-  let averageData = getModeOfSelectedData(selectedCSVdata)
-  displayGraph(averageData)
+  let modeData = getModeOfSelectedData(selectedCSVdata)
+  displayGraph(modeData)
+})
+
+medianGraphButton.addEventListener('click', () => {
+  let selectedCSVdata = getSelectedCSVdata(cellSelectionIndex)
+  let medianData = getMedianOfSelectedData(selectedCSVdata)
+  displayGraph(medianData)
 })
 
 function getSelectedCSVdata(cellSelectionIndex) {
@@ -234,6 +242,17 @@ function getModeOfSelectedData(selectedCSVdata) {
   for (let entrys of selectedCSVdata) {
     let values = entrys[1]
     let modeOfValues = (math.mode(values))[0]
+    data.push({name: entrys[0], value: modeOfValues})
+  }
+  return data
+}
+
+function getMedianOfSelectedData(selectedCSVdata) {
+  let data = []
+  for (let entrys of selectedCSVdata) {
+    let values = entrys[1]
+    values = values.map(value => +value)
+    let modeOfValues = (math.median(values))
     data.push({name: entrys[0], value: modeOfValues})
   }
   return data
